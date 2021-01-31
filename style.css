@@ -31,11 +31,8 @@ body, html {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-}
 
-.game-stats{
-    width: 30%;
-    height: 100%;
+    background-color: turquoise;
 }
 
 .tile-img{
@@ -85,4 +82,29 @@ body, html {
 .flip-card-face--back {
     background-image: url("images/butterfly.png");
     transform: rotateY(180deg);
+}
+
+.empty{
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+
+    background: transparent;
+}
+
+.game-stats{
+    width: 30%;
+    height: 100%;
+    margin: 10px 0px;
+}
+
+.button{
+    width: 50%;
+    height: 25px;
+
+    margin: 7px 25%;
+}
+
+.game-start-button{
+    margin: 50px 25% 25px;
 }

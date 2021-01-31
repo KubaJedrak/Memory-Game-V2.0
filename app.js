@@ -1,4 +1,8 @@
 
+// ISSUES TO RESOLVE:
+// 1. prevent tile selection if the previous pair is still visible
+
+
 const tiles = [
     {
         id: 0, 
@@ -89,6 +93,41 @@ const tiles = [
         id: 17,
         name: "spider",
         img: "images/spider.png"
+    },
+    {
+        id: 18,
+        name: "bullfinch",
+        img: "images/bullfinch.png"
+    },
+    {
+        id: 19,
+        name: "cat",
+        img: "images/cat.png"
+    },
+    {
+        id: 20,
+        name: "chameleon",
+        img: "images/chameleon.png"
+    },
+    {
+        id: 21,
+        name: "cow",
+        img: "images/cow.png"
+    },
+    {
+        id: 22,
+        name: "lion",
+        img: "images/lion.png"
+    },
+    {
+        id: 23,
+        name: "snake",
+        img: "images/snake.png"
+    },
+    {
+        id: 24,
+        name: "zebra",
+        img: "images/zebra.png"
     }
 ]
    
@@ -101,11 +140,10 @@ let randomNumber
 let randomIndecesArray = []
 let tilesDrawn = []
 
-
 // Difficulty selection:
 difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener("click", (e) => {
     difficulty = e.target.id
-    console.log(difficulty)
+    // console.log(difficulty) // remove later
     assignDifficulty()
 }))
 
@@ -126,25 +164,19 @@ function assignDifficulty() {
 function getRandomIndecesArray() {
     let randomIndex
 
-    function getRandomTilesIndex() {
+    // generate an integer, then check if it isnt part of the array & if so push it in
+    while (randomIndecesArray.length < numberOfTilesToDraw) {
         randomIndex = Math.floor(Math.random() * tiles.length)
-        return randomIndex
-    }
-    
-    for (let i = 0; i < numberOfTilesToDraw; i++) {
-        getRandomTilesIndex()
-
-        // check if numbers in randomIndecesArray repeat and if so replace them
-        while (randomIndecesArray.indexOf(randomIndex) !== -1 ) {
-            getRandomTilesIndex()
+        if (!randomIndecesArray.includes(randomIndex)) {
+            randomIndecesArray.push(randomIndex)
         }
-        randomIndecesArray.push(randomIndex)
     }
-    console.log(`Original array: ${randomIndecesArray}`)
+
+    console.log(`Original array: ${randomIndecesArray}`) // remove later
     return randomIndecesArray
 }
 
-// clear randomIndecesArray       // unnecessary ??
+// clear randomIndecesArray       // remove later ??
 function clearRandomIndecesArray() {
     randomIndecesArray = []
 }
@@ -153,7 +185,7 @@ function clearRandomIndecesArray() {
 
 // transform random indices into an array with corresponding tiles:
 function updateTilesDrawn() {
-
+   
     tiles.forEach( tile => {
         for (i = 0; i < randomIndecesArray.length; i++ ) {
             if (tile.id === randomIndecesArray[i]) {
@@ -161,35 +193,25 @@ function updateTilesDrawn() {
             }
         }
     })
-
-    return tilesDrawn
 }
 
-// duplicate the values in the tiles array
+// duplicate the values in the tiles array and shuffle the array elements
 function duplicateTiles() {
-
     for (let i = 0; i < numberOfTilesToDraw; i++ ) {
-        tilesDrawn.push(tilesDrawn[i])
+        tilesDrawn.push(tilesDrawn[i])  // array.from
     }
-}
-
-// randomize the order of tiles:
-function randomizeTiles() {
     tilesDrawn.sort(() => Math.random() - 0.5)
 }
 
 // draw tiles:
 function drawTiles() {
-    
     updateTilesDrawn()
     duplicateTiles()
-    randomizeTiles()
-
     generateTiles()
 }
 
 // create the HTML components for each tile:
-function generateTiles() {
+function generateTiles() {        // split into multiple functions?
 
     for (let i = 0; i <= tilesDrawn.length - 1; i++) {
         // create a new tile container - space for flipping
@@ -202,6 +224,8 @@ function generateTiles() {
         let flipCard = document.createElement("div")
         newTile.appendChild(flipCard)
         flipCard.classList.add("flip-card-inner")
+        flipCard.classList.add(`flip-card-${tilesDrawn[i].id}`)
+        flipCard.setAttribute("id", i)
             
         // create flip card faces
         let flipCardFront = document.createElement("div")
@@ -223,8 +247,97 @@ function generateTiles() {
         flipCardBack.appendChild(imgBack)
         imgBack.setAttribute("src", tilesDrawn[i].img)
 
-        newTile.addEventListener("click", () => {
-            flipCard.classList.toggle("is-flipped")
-        })
+        function flipCardFunc() {
+            if (!newTile.classList.contains("empty")) {   // removing this breakes stuff
+                flipCard.classList.toggle("is-flipped")
+
+                cardID = flipCard.getAttribute("id")
+                cardClass = tilesDrawn[i].id
+    
+                currentChoicesIDs.push(cardID)
+                currentChoices.push(cardClass)
+    
+                console.log(`currentChoices: ${currentChoices}`)
+                console.log(`currentChoicesID: ${currentChoicesIDs}`)
+    
+                if (currentChoices.length === 2) {
+                    setTimeout(checkForMatch, 500);
+                }
+            }
+        }
+        newTile.addEventListener("click", flipCardFunc)
     }
 }
+
+function checkForMatch() {
+    if (currentChoices[0] === currentChoices[1]) {
+        console.log("PAIRING SUCCESSFUL")
+        emptyPairedTiles()
+        resetChoices()
+        checkVars()
+    } else {
+        console.log("PAIRING NOT SUCCESSFUL")
+        flipBack()
+        resetChoices()
+        checkVars()
+    }
+}
+
+function emptyPairedTiles() {
+    parentOne = document.getElementById(currentChoicesIDs[0]).parentElement
+    parentTwo = document.getElementById(currentChoicesIDs[1]).parentElement
+
+    // document.getElementById(currentChoicesIDs[0]).removeAttribute("id")
+    parentOne.classList.remove("tile")
+    parentOne.classList.remove("flip-card")
+    parentOne.classList.add("empty")
+
+    // document.getElementById(currentChoicesIDs[1]).removeAttribute("id")
+    parentTwo.classList.remove("tile")
+    parentTwo.classList.remove("flip-card")
+    parentTwo.classList.add("empty")
+
+    document.getElementById(currentChoicesIDs[0]).remove()
+    document.getElementById(currentChoicesIDs[1]).remove()
+
+    // check for the finish condition
+    cardsPaired.push(currentChoices[0])  // adds the tile's class to the array
+    gameFinished()
+}
+
+function checkVars() {
+    console.log("-----------------------------------------")
+    console.log(`parent one: ${parentOne}`) 
+    console.log(`parent two: ${parentTwo}`)   
+    console.log(`currentChoices: ${currentChoices}`)
+    console.log(`currentChoicesIDs: ${currentChoicesIDs}`)
+    console.log(`cardID: ${cardID}`)
+    console.log(`cardClass: ${cardClass}`)
+}
+
+function resetChoices() {
+    currentChoices = []
+    currentChoicesIDs = []
+    parentOne = null
+    parentTwo = null
+    cardClass = null
+    cardID = null
+}
+
+function flipBack() {
+    document.getElementById(currentChoicesIDs[0]).classList.toggle("is-flipped")
+    document.getElementById(currentChoicesIDs[1]).classList.toggle("is-flipped")
+}
+
+function gameFinished() {
+    if (cardsPaired.length === numberOfTilesToDraw) {
+        window.alert("Congratulations, you won!")  // change as required
+    }
+}
+
+let cardsPaired = []
+let parentOne = null
+let parentTwo = null
+let cardID = null
+let currentChoices = []
+let currentChoicesIDs = []
