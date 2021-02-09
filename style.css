@@ -59,6 +59,7 @@ body, html {
     transition: transform 0.3s;
     transform-style: preserve-3d;
 
+    background-color: white;
     border: 1px solid lightgray;
     border-radius: 5px;
 }

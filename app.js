@@ -1,7 +1,7 @@
-
+"use strict"
 // ISSUES TO RESOLVE:
-// 1. prevent tile selection if the previous pair is still visible
-
+// 2. prevent clicking on the same tile twice messing up      
+// ==> if (cardChoicesIDs[0] !== cardID) ?? not this exactly, but getting closer
 
 const tiles = [
     {
@@ -132,34 +132,132 @@ const tiles = [
 ]
    
 const difficultyButtons = document.querySelectorAll(".diff-buttons")
+const startButton = document.querySelector(".game-start-button")
 const gameBox = document.querySelector(".game-box")
+const displayTime = document.querySelector(".time-display")
 
 let difficulty
 let numberOfTilesToDraw
 let randomNumber
 let randomIndecesArray = []
 let tilesDrawn = []
+let time
+let timer
+
+let cardsPaired = []
+let parentOne
+let parentTwo
+let cardID
+let cardClass
+let currentChoices = []
+let currentChoicesIDs = []
+
+let gameInProgress = false
+let difficultyAssigned = false
 
 // Difficulty selection:
 difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener("click", (e) => {
     difficulty = e.target.id
-    // console.log(difficulty) // remove later
-    assignDifficulty()
 }))
 
-function assignDifficulty() {
+function assignDifficulty() {    // sometimes it adds too many tiles if buttons are clicked to quickly?
     if (difficulty === "diff-easy") {
         numberOfTilesToDraw = 6
+        time = 60
     } else if (difficulty === "diff-med") {
         numberOfTilesToDraw = 12
+        time = 120
     } else if (difficulty === "diff-hard") {
         numberOfTilesToDraw = 18
+        time = 180
     }
-    return numberOfTilesToDraw
+    displayTime.innerText = time // displays time available at start
+}
+
+// Game Start:
+startButton.addEventListener("click", gameStart)
+
+function gameStart() {
+
+    if (!gameInProgress && difficulty) {
+        assignDifficulty()
+        getRandomIndecesArray()
+        drawTiles()
+        gameInProgressFunc() 
+    } else if (gameInProgress) {
+        gameLost()
+    }
+}
+
+function gameInProgressFunc() {
+
+    timer = setInterval( gameTimer, 1000) 
+        
+    gameInProgress = true  // remove? - game state
+    
+    difficultyButtons.forEach ( button => {
+        button.disabled = true
+    })
+
+    startButton.innerText = "End Game"   
+}
+
+function gameTimer() {
+
+    time -= 1
+    displayTime.innerHTML = time
+    if (cardsPaired.length === numberOfTilesToDraw) {
+        clearInterval(timer)
+        gameFinished()
+    } else if (time === 0) {
+        clearInterval(timer)
+        gameLost()
+    }
+}
+
+
+function gameFinished() {
+      
+    window.alert("Congratulations, you won!")  // add a popup
+    resetStats()
+
+    //clear board
+    gameBox.innerHTML = ""
+
+    difficultyButtons.forEach( button => {
+        button.disabled = false
+    })
+
+    gameInProgress = false
+
+    startButton.innerText = "Start Game"
+}
+
+function gameLost() {
+    window.alert("Better luck next time")  // add a popup
+    resetStats()
+
+    //clear board
+    gameBox.innerHTML = ""
+
+    difficultyButtons.forEach( button => {
+        button.disabled = false
+    })
+
+    gameInProgress = false
+
+    startButton.innerText = "Start Game"
+}
+
+function resetStats() {
+    time = null
+    numberOfTilesToDraw = null
+    cardsPaired = []
+    randomIndecesArray = []
+    tilesDrawn = []
 }
 
 // // Generate Tiles:
-
 // Generate an array with random indeces from the tiles array:
 function getRandomIndecesArray() {
     let randomIndex
@@ -171,8 +269,6 @@ function getRandomIndecesArray() {
             randomIndecesArray.push(randomIndex)
         }
     }
-
-    console.log(`Original array: ${randomIndecesArray}`) // remove later
     return randomIndecesArray
 }
 
@@ -181,13 +277,11 @@ function clearRandomIndecesArray() {
     randomIndecesArray = []
 }
 
-// --------------------------------------------------------------------------------------
-
 // transform random indices into an array with corresponding tiles:
 function updateTilesDrawn() {
    
     tiles.forEach( tile => {
-        for (i = 0; i < randomIndecesArray.length; i++ ) {
+        for (let i = 0; i < randomIndecesArray.length; i++ ) {
             if (tile.id === randomIndecesArray[i]) {
                 tilesDrawn.push(tile)
             }
@@ -196,11 +290,11 @@ function updateTilesDrawn() {
 }
 
 // duplicate the values in the tiles array and shuffle the array elements
-function duplicateTiles() {
-    for (let i = 0; i < numberOfTilesToDraw; i++ ) {
-        tilesDrawn.push(tilesDrawn[i])  // array.from
+function duplicateTiles() {    
+    for (let i = 0; i < numberOfTilesToDraw; i++ ) { // simplify this section
+        tilesDrawn.push(tilesDrawn[i])
     }
-    tilesDrawn.sort(() => Math.random() - 0.5)
+    tilesDrawn.sort(() => Math.random() - 0.5)    
 }
 
 // draw tiles:
@@ -211,7 +305,7 @@ function drawTiles() {
 }
 
 // create the HTML components for each tile:
-function generateTiles() {        // split into multiple functions?
+function generateTiles() {
 
     for (let i = 0; i <= tilesDrawn.length - 1; i++) {
         // create a new tile container - space for flipping
@@ -248,18 +342,20 @@ function generateTiles() {        // split into multiple functions?
         imgBack.setAttribute("src", tilesDrawn[i].img)
 
         function flipCardFunc() {
-            if (!newTile.classList.contains("empty")) {   // removing this breakes stuff
+            if (!newTile.classList.contains("empty") && currentChoices.length < 2) {   // first condition prevents clicking empty space, 2nd prevents quickly clicking 3 tiles before timeout triggers
                 flipCard.classList.toggle("is-flipped")
 
                 cardID = flipCard.getAttribute("id")
                 cardClass = tilesDrawn[i].id
-    
-                currentChoicesIDs.push(cardID)
-                currentChoices.push(cardClass)
-    
-                console.log(`currentChoices: ${currentChoices}`)
-                console.log(`currentChoicesID: ${currentChoicesIDs}`)
-    
+
+                if (currentChoicesIDs.length >= 0 && currentChoicesIDs[0] !== cardID) { // prevents error when clicking on the same tile twice
+                    currentChoicesIDs.push(cardID)
+                    currentChoices.push(cardClass)
+                } else {
+                    currentChoicesIDs = []
+                    currentChoices = []
+                }
+                    
                 if (currentChoices.length === 2) {
                     setTimeout(checkForMatch, 500);
                 }
@@ -271,15 +367,11 @@ function generateTiles() {        // split into multiple functions?
 
 function checkForMatch() {
     if (currentChoices[0] === currentChoices[1]) {
-        console.log("PAIRING SUCCESSFUL")
         emptyPairedTiles()
         resetChoices()
-        checkVars()
     } else {
-        console.log("PAIRING NOT SUCCESSFUL")
         flipBack()
         resetChoices()
-        checkVars()
     }
 }
 
@@ -287,12 +379,10 @@ function emptyPairedTiles() {
     parentOne = document.getElementById(currentChoicesIDs[0]).parentElement
     parentTwo = document.getElementById(currentChoicesIDs[1]).parentElement
 
-    // document.getElementById(currentChoicesIDs[0]).removeAttribute("id")
     parentOne.classList.remove("tile")
     parentOne.classList.remove("flip-card")
     parentOne.classList.add("empty")
 
-    // document.getElementById(currentChoicesIDs[1]).removeAttribute("id")
     parentTwo.classList.remove("tile")
     parentTwo.classList.remove("flip-card")
     parentTwo.classList.add("empty")
@@ -300,19 +390,13 @@ function emptyPairedTiles() {
     document.getElementById(currentChoicesIDs[0]).remove()
     document.getElementById(currentChoicesIDs[1]).remove()
 
-    // check for the finish condition
-    cardsPaired.push(currentChoices[0])  // adds the tile's class to the array
-    gameFinished()
+    // push the currently matched pair into an array holding the collection of matched pair IDs
+    cardsPaired.push(currentChoices[0])
 }
 
-function checkVars() {
-    console.log("-----------------------------------------")
-    console.log(`parent one: ${parentOne}`) 
-    console.log(`parent two: ${parentTwo}`)   
-    console.log(`currentChoices: ${currentChoices}`)
-    console.log(`currentChoicesIDs: ${currentChoicesIDs}`)
-    console.log(`cardID: ${cardID}`)
-    console.log(`cardClass: ${cardClass}`)
+function flipBack() {
+    document.getElementById(currentChoicesIDs[0]).classList.toggle("is-flipped")
+    document.getElementById(currentChoicesIDs[1]).classList.toggle("is-flipped")
 }
 
 function resetChoices() {
@@ -324,20 +408,3 @@ function resetChoices() {
     cardID = null
 }
 
-function flipBack() {
-    document.getElementById(currentChoicesIDs[0]).classList.toggle("is-flipped")
-    document.getElementById(currentChoicesIDs[1]).classList.toggle("is-flipped")
-}
-
-function gameFinished() {
-    if (cardsPaired.length === numberOfTilesToDraw) {
-        window.alert("Congratulations, you won!")  // change as required
-    }
-}
-
-let cardsPaired = []
-let parentOne = null
-let parentTwo = null
-let cardID = null
-let currentChoices = []
-let currentChoicesIDs = []
