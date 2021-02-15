@@ -168,13 +168,13 @@ difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener(
 function assignDifficulty() {
     if (difficulty === "diff-easy") {
         numberOfTilesToDraw = 10
-        time = 59900
+        time = 60000
     } else if (difficulty === "diff-med") {
         numberOfTilesToDraw = 15
-        time = 119900
+        time = 120000
     } else if (difficulty === "diff-hard") {
         numberOfTilesToDraw = 20
-        time = 179900
+        time = 180000
     }
 }
 
@@ -419,6 +419,6 @@ function timeDisplay() {
     if (miliseconds.length < 2) {
         miliseconds = "0" + miliseconds
     }
-    
+
     displayTime.innerHTML = `Time Remaining: ${minutes}:${seconds}:${miliseconds}`
 }
