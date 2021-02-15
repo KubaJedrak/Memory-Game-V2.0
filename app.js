@@ -160,18 +160,22 @@ difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener(
     difficulty = e.target.id
 }))
 
-function assignDifficulty() {    // sometimes it adds too many tiles if buttons are clicked to quickly?
+// Difficulty info:
+difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener("mouseover", (e) => {
+    // add later
+}))
+
+function assignDifficulty() {
     if (difficulty === "diff-easy") {
-        numberOfTilesToDraw = 6
-        time = 60
+        numberOfTilesToDraw = 10
+        time = 59900
     } else if (difficulty === "diff-med") {
-        numberOfTilesToDraw = 12
-        time = 120
+        numberOfTilesToDraw = 15
+        time = 119900
     } else if (difficulty === "diff-hard") {
-        numberOfTilesToDraw = 18
-        time = 180
+        numberOfTilesToDraw = 20
+        time = 179900
     }
-    displayTime.innerText = time // displays time available at start
 }
 
 // Game Start:
@@ -191,9 +195,9 @@ function gameStart() {
 
 function gameInProgressFunc() {
 
-    timer = setInterval( gameTimer, 1000) 
+    timer = setInterval( gameTimer, 10) 
         
-    gameInProgress = true  // remove? - game state
+    gameInProgress = true
     
     difficultyButtons.forEach ( button => {
         button.disabled = true
@@ -204,8 +208,8 @@ function gameInProgressFunc() {
 
 function gameTimer() {
 
-    time -= 1
-    displayTime.innerHTML = time
+    time -= 10
+    timeDisplay()
     if (cardsPaired.length === numberOfTilesToDraw) {
         clearInterval(timer)
         gameFinished()
@@ -215,38 +219,27 @@ function gameTimer() {
     }
 }
 
-
-function gameFinished() {
-      
-    window.alert("Congratulations, you won!")  // add a popup
+function endGame() {
     resetStats()
-
-    //clear board
     gameBox.innerHTML = ""
-
+    gameInProgress = false
     difficultyButtons.forEach( button => {
         button.disabled = false
     })
-
-    gameInProgress = false
-
     startButton.innerText = "Start Game"
 }
 
+function gameFinished() {
+    endGame()
+    window.alert("Congratulations, you won!")  // add a popup
+}
+
 function gameLost() {
+    endGame()
     window.alert("Better luck next time")  // add a popup
-    resetStats()
 
-    //clear board
-    gameBox.innerHTML = ""
-
-    difficultyButtons.forEach( button => {
-        button.disabled = false
-    })
-
-    gameInProgress = false
-
-    startButton.innerText = "Start Game"
+    clearInterval(timer)
+    displayTime.innerHTML = "Time Remaining: "
 }
 
 function resetStats() {
@@ -269,7 +262,6 @@ function getRandomIndecesArray() {
             randomIndecesArray.push(randomIndex)
         }
     }
-    return randomIndecesArray
 }
 
 // clear randomIndecesArray       // remove later ??
@@ -408,3 +400,25 @@ function resetChoices() {
     cardID = null
 }
 
+function timeDisplay() {
+
+    let minutes = Math.floor (time / 60000)
+    let seconds = Math.floor((time % 60000) / 1000)
+    let miliseconds = Math.floor(time % 1000) / 10
+
+    minutes = minutes + ""
+    seconds = seconds + ""
+    miliseconds = miliseconds + ""
+
+    if (minutes.length < 2) {
+        minutes = "0" + minutes
+    }
+    if (seconds.length < 2) {
+        seconds = "0" + seconds
+    }    
+    if (miliseconds.length < 2) {
+        miliseconds = "0" + miliseconds
+    }
+    
+    displayTime.innerHTML = `Time Remaining: ${minutes}:${seconds}:${miliseconds}`
+}
