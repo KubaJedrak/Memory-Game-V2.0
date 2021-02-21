@@ -1,19 +1,42 @@
-body, html {
-    width: 99.5%;
-    height: 99.5%;
 
+/* 
+
+*/
+
+* {
     box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    /* background-color: rgb(52, 140, 255); */
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#4c4c4c+0,595959+12,666666+25,474747+39,2c2c2c+50,000000+51,111111+60,2b2b2b+76,1c1c1c+91,131313+100;Black+Gloss+%231 */
+    background: rgb(76,76,76); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(76,76,76,1) 0%, rgba(89,89,89,1) 12%, rgba(102,102,102,1) 25%, rgba(71,71,71,1) 39%, rgba(44,44,44,1) 50%, rgba(0,0,0,1) 51%, rgba(17,17,17,1) 60%, rgba(43,43,43,1) 76%, rgba(28,28,28,1) 91%, rgba(19,19,19,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(76,76,76,1) 0%,rgba(89,89,89,1) 12%,rgba(102,102,102,1) 25%,rgba(71,71,71,1) 39%,rgba(44,44,44,1) 50%,rgba(0,0,0,1) 51%,rgba(17,17,17,1) 60%,rgba(43,43,43,1) 76%,rgba(28,28,28,1) 91%,rgba(19,19,19,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(76,76,76,1) 0%,rgba(89,89,89,1) 12%,rgba(102,102,102,1) 25%,rgba(71,71,71,1) 39%,rgba(44,44,44,1) 50%,rgba(0,0,0,1) 51%,rgba(17,17,17,1) 60%,rgba(43,43,43,1) 76%,rgba(28,28,28,1) 91%,rgba(19,19,19,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
+
 }
 
 .wrapper {
     width: 80%;
+    height: 78.5vh;
 
     margin: 100px auto;
 }
 
 .game-container{
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
 
     display: flex;
     flex-wrap: wrap;
@@ -24,39 +47,61 @@ body, html {
 
 .game-box{
     width: 70%;
-    min-width: 500px;
-    height: 100%;
-    min-height: 300px;
+    min-height: 50vh;
+    padding: 1% 1%;
+
 
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
 
-    background-color: turquoise;
+    /* gap: 1%; */
+
+
+    border-radius: 10px 0px 0px 10px;
+
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 45px,
+        #7a7a7a 45px,
+        #7a7a7a 90px
+    )
 }
 
 .tile-img{
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 100%;
 }
 
 /* Flip card */
 
-.flip-card {
+.flip-card {    
     background-color: transparent;
-    width: 100px;
-    height: 100px;
+    width: 5.5vw; /* ?????????? */
+    height: 5.5vw; /* ?????????? */
     
     perspective: 1000px;
 
-    margin: 5px;
+    margin: 1%;
+    
+    animation: arrival 2s; 
 }
+
+/* ADD ONE MORE CONTAINER AND SWAP THE TRANSITION TO IT INSTEAD? 
+TO KEEP THE SIZE OF THE "SLOT" THE SAME */
+
+@keyframes arrival { 
+    0% {width: 0vw; height: 0vw;} 
+    100% {width: 5.5vw; height: 5.5vw;}
+}
+
+/* add keyframes */
 
 .flip-card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.3s;
+    transition: transform 0.5s;
     transform-style: preserve-3d;
 
     background-color: white;
@@ -86,26 +131,306 @@ body, html {
 }
 
 .empty{
-    width: 100px;
-    height: 100px;
-    margin: 5px;
+    width: 5.5vw;
+    height: 5.5vw;
+    margin: 1%;
 
     background: transparent;
+
 }
 
 .game-stats{
     width: 30%;
+    margin: 0px;
+    padding: 1% 0% 0% 0%;
+    border-radius: 0px 10px 10px 0px;
+
+    background-color: #ffffff4d;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: stretch;
+}
+
+.button {
+    width: 40%;
+    min-height: 30px;
+    /* height: 33%; */
+
+    margin: 1.25% 30% 1.25%;
+
+    background-color: #269dff;
+    border: 0px;
+    border-radius: 5%;
+
+    transition: 0.2s;
+}
+
+
+.button:active:focus {
+    outline: none im !important;
+    border: none;
+}
+
+
+.start-buttons{
+    height: 35%;
+    width: 100%;
+}
+
+.diff-button:active {
+    border: 0px;
+}
+
+.button:hover {
+    background-color: #84c8ff;
+    transition: 0.2s;
+}
+
+
+
+.time {
+    height: 20%;
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pairs-left {
+    width: 60%;
+    margin: 1% auto 2%;
+
+    font-size: 16px;
+}
+
+.pairs-left-display {
+    font-size: 16px;
+}
+
+
+.time-display {
+    width: 60%;
+    margin: 2% auto 1%;
+
+    font-size: 16px;
+}
+
+.best-scores {
+    width: 100%;
+    height: 35%;
+}
+
+.high-scores {
+    width: 90%;
     height: 100%;
-    margin: 10px 0px;
+    margin: 0% auto;
+
+    border: 1px darkgrey solid;
+
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.button{
-    width: 50%;
-    height: 25px;
+.high-scores-buttons {
+    width: 100%;
+    height: 20%;
 
-    margin: 7px 25%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-.game-start-button{
-    margin: 50px 25% 25px;
+.score-diff-button {
+    margin: 0% auto;
+    width: 33.33%;
+    height: 100%;
+    padding: 0%;
+
+    border-radius: 0px;
+
+    transition: 0.5s;
+}
+
+.score-diff-button:active {
+    background-color: #84c8ff;
+    transition: 0.5s;
+}
+
+.button-active {
+    background-color: #84c8ff;
+    transition: 0.5s;
+}
+
+.high-scores-header {
+    height: 20%;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    background-color: #269dff;
+}
+
+.high-scores-header-text {
+    font-size: 20px;
+}
+
+.high-scores-table-top {
+    height: 25%;
+    width: 100%;
+}
+
+.high-scores-table {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.high-scores-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.high-scores-text {
+    width: 33.33%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.icon-credit{
+    width: 100%;
+    padding: 1% 5%;
+    font-size: 10px;
+    align-self: flex-end;
+    justify-self: end;
+    text-align: end;
+}
+
+.link {
+    font-size: 10px;
+    color: #008cff;
+    transition: 0.5s;
+}
+
+.link:hover {
+    color: #84c8ff;
+    transition: 0.5s;
+}
+
+/* ----- POP UPS STYLING: ----- */
+
+
+
+.popup-box {
+    width: 40%;
+    height: 30%;
+
+    position: fixed;
+    top: 30%;
+    left: 35%;
+
+    font-size: 20px;
+
+    border-radius: 10px;
+    border: 1px solid grey;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    background-color: rgba(255, 255, 255, 0.9);
+    
+    display: flex;
+    display: none;
+}
+
+.popup-exit {
+    width: 100%;
+    height: 5%;
+}
+
+.popup-exit-frame {
+    width: 36px;
+    height: 36px;
+
+    margin: 1% 90%;
+
+    border: 3px black solid;
+    border-radius: 50%;
+
+    transition: 0.15s;
+}
+
+.popup-exit-frame:hover {
+    border: 3px #84c8ff solid;
+
+    transition: 0.15s;
+}
+
+.popup-exit-img {
+    width: 20px;
+    height: 20px;
+
+    margin: 5px;
+
+    color: #84c8ff;
+}
+
+.popup-new-input {
+    width: 80%;
+    height: 80%;
+
+    margin: 5% auto;
+}
+
+.popup-new-input-form {
+    width: 90%;
+}
+
+.form-length-message {
+    display: none;
+}
+
+.form-button {
+    display: block;
+}
+
+.popup-new-check {
+    display: none;
+
+
+}
+
+.popup-new-input-repeat {
+    display: none;
+
+
+}
+
+.popup-new-check-repeat {
+    display: none;
+
+
+}
+
+.popup-update {
+    display: none;
+
+
+}
+
+.popup-fail {
+    display: none;
+
+
+}
+
+.popup-fail-bot-check {
+    display: none;
+
+
 }

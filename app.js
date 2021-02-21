@@ -125,13 +125,24 @@ const tiles = [
         id: 24,
         name: "zebra",
         img: "images/zebra.png"
-    }
+    },
+    {
+        id: 25,
+        name: "panda",
+        img: "images/panda.png"
+    }    
 ]
+
+// change name of variable "difficulty" to else more clear like "selectedGameDifficulty"
+// two minor changes to functions (details below in comments)
+// add name and popup system
+// rework the "intro" animation (info below)
    
-const difficultyButtons = document.querySelectorAll(".diff-buttons")
+const difficultyButtons = document.querySelectorAll(".diff-button")
 const startButton = document.querySelector(".game-start-button")
 const gameBox = document.querySelector(".game-box")
 const displayTime = document.querySelector(".time-display")
+const displayNumberOfPairs = document.querySelector(".pairs-left-display")
 
 let difficulty
 let numberOfTilesToDraw
@@ -155,23 +166,33 @@ let difficultyAssigned = false
 // Difficulty selection:
 difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener("click", (e) => {
     difficulty = e.target.id
+    startButton.disabled = false;
+    assignDifficulty()
+    displayDiffInfo()
 }))
 
-// Difficulty info:
-difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener("mouseover", (e) => {
-    // add DIFFICULTY INFORMATION later
-}))
+function displayDiffInfo() {
+    timeDisplay()
+    displayPairsNumber()
+}
+
+function displayPairsNumber() {
+    displayNumberOfPairs.innerHTML = numberOfTilesToDraw - cardsPaired.length
+    if (numberOfTilesToDraw === null) {
+        displayNumberOfPairs.innerHTML = ""
+    }
+}
 
 function assignDifficulty() {
     if (difficulty === "diff-easy") {
-        numberOfTilesToDraw = 10
-        time = 60000
+        numberOfTilesToDraw = 12
+        time = 90000
     } else if (difficulty === "diff-med") {
-        numberOfTilesToDraw = 15
-        time = 120000
+        numberOfTilesToDraw = 16
+        time = 150000
     } else if (difficulty === "diff-hard") {
         numberOfTilesToDraw = 20
-        time = 180000
+        time = 210000
     }
 
     // changes scoreDisplay (Best Times) to currently selected game difficulty on game start:
@@ -186,6 +207,7 @@ startButton.addEventListener("click", gameStart)
 function gameStart() {
     if (!gameInProgress && difficulty) {
         assignDifficulty()
+        displayPairsNumber() // to reset the number of pairs to match visible on the screen
         getRandomIndecesArray()
         drawTiles()
         gameInProgressFunc() 
@@ -217,8 +239,8 @@ function gameTimer() {
 }
 
 function endGame() {
-    updateScores()
     resetStats()
+    displayPairsNumber()
     gameBox.innerHTML = "" //empties the board (also removes objects with class "empty")
     gameInProgress = false
     difficultyButtons.forEach( button => {
@@ -229,6 +251,7 @@ function endGame() {
 
 // game ended successfully - player won
 function gameFinished() {
+    updateScores()
     endGame()
     window.alert("Congratulations, you won!")  // add a popup
 }
@@ -379,6 +402,7 @@ function emptyPairedTiles() {
     // push the currently matched pair into an array holding the collection of matched pair IDs
     cardsPaired.push(currentChoices[0])
     // ^ array later is used to check for game finished condition
+    displayPairsNumber() //updates when tiles of the same pair are matched together
 }
 
 function flipBack() {
@@ -417,18 +441,17 @@ function timeDisplay() {
     displayTime.innerHTML = `Time Remaining: ${minutes}:${seconds}:${miliseconds}`
 }
 
-// -----------------------------------------------------------
-// BEST SCORES:
+// ----- BEST SCORES: -----
 
 //check if Best Scores already exist & if not, populate them with empty logs:
 let scoresInitialCheck = window.localStorage.getItem("scores")
 
-if (scoresInitialCheck === null) {
-    let zeroScores = [
+if (scoresInitialCheck === null) { 
+    let zeroScores = [ // change to function
         {
             id: "diff-easy",
             values: [
-                0,
+                0, 
                 0,
                 0
             ]
@@ -461,23 +484,41 @@ const thirdScore = document.querySelector(".third-score")
 // pull best times
 let scores = JSON.parse(window.localStorage.getItem("scores"))
 let scoreDisplayDifficulty
+let scoreDisplayFocus
 
 // adds Click event listener to Score Display buttons to change displayed scores based on game difficulty
 scoreDiffButtons.forEach(button => {
+
     button.addEventListener("click", (e) => {
+
+        scoreDiffButtons.forEach( button => {  // FRANKSTEIN AGAIN? :D
+            button.classList.remove("button-active")
+        })
+
         scoreDisplayDifficulty = e.target.id
         displayScores(scoreDisplayDifficulty)
+        e.target.classList.add("button-active") // adds active class to highlight in viewport
     })
 })
 
 // updates the Best Scores display
 function displayScores(scoreDisplayDifficulty) {
+
+    scoreDiffButtons.forEach( button => {  //  removes active score display indicator  || FRANKSTEIN AGAIN? :D
+        button.classList.remove("button-active")
+    })
+
     scores.forEach( score => {
         if (score.id === scoreDisplayDifficulty) {
-            console.log(score.values[0])
             parseScoreTime(score.values[0], firstScore)
             parseScoreTime(score.values[1], secondScore)
             parseScoreTime(score.values[2], thirdScore)
+        }
+    })
+
+    scoreDiffButtons.forEach( scoreButton => {
+        if (scoreButton.id === scoreDisplayDifficulty) {
+            scoreButton.classList.add("button-active")
         }
     })
 }
@@ -506,7 +547,7 @@ function parseScoreTime(scoreValue, scoreDisplay) {
 }
 
 // updates score array after game end
-function updateScores() {
+function updateScores() {                                           // array.find()
     scores.forEach( score => {
         if (score.id === difficulty) {  // Frankenstein would be proud
             for (let i = 0; i < score.values.length; i++) {
@@ -524,4 +565,15 @@ function updateScores() {
     displayScores(scoreDisplayDifficulty)
 }
 
-// ADD NAMES/HANDLES?
+// ------- POP-UPs Behaviour: ------- 
+// ADD NAMES/HANDLES
+
+const exitButton = document.querySelector(".popup-exit-frame")
+
+const popupWindow = document.querySelector(".popup-box")
+
+exitButton.addEventListener("click", () => {
+    popupWindow.style.display = "none"
+})
+
+// popupWindow.style.display = "block"
