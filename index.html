@@ -87,7 +87,6 @@
                 </div>
 
                 <div class="icon-credit">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik" class="link">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon" class="link">www.flaticon.com</a></div>
-                <!-- <div>Icons made by <a href="https://icon54.com/" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
             </div>
 
         </div>
@@ -96,14 +95,14 @@
 
             <div class="popup-exit">
                 <figure class="popup-exit-frame">
-                    <img src="images/close.svg" alt="escape button" class="popup-exit-img">
+                    <img src="images/close.png" alt="escape button" class="popup-exit-img">
                 </figure>
             </div>
 
             <div class="popup-content">
 
-                <div class="popup-new-input">
-                    <span class="popup-new-input-text">
+                <div class="popup-input">
+                    <span class="popup-input-text">
                         Congratulations! You did well. 
                         <br>
                         <br>                    
@@ -112,92 +111,26 @@
                         <br>
                     </span>
         
-                    <form class="popup-new-input-form">
-                        <input class="form-name" type="text" name="name" id="player-name" placeholder="Input your name here">
+                    <form class="popup-input-form">
+                        <input class="form-name" type="text" name="name" id="player-name" placeholder="Input your name here" maxlength="7">
                         <span class="form-length-message">What did I tell you? Make it shorter! (Hint: My limited processing capability can only accept 5 signs)</span>
-                        <button class="form-button">This is it!</button>
+                        <button class="form-button" type="button">This is it!</button>
                     </form>
                 </div>
     
-                <div class="popup-new-check">
-                    <span class="popup-new-check-text">Are you sure this name is cool enough for you?</span>
-                    <button class="popup-new-check-button-yes">Yep!</button>
-                    <button class="popup-new-check-button-no">I will try again</button>
-                </div>
-    
-                <div class="popup-new-input-repeat">
-                    <span class="popup-new-input-text">
-                        So, what do you want to be called now?
-                    </span>
-        
-                    <form>
-                        <input class="form-name" type="text" name="name" id="player-name" placeholder="Input your name here">
-                        <span>What did I tell you? Make it shorter! (Hint: My limited processing capability can only accept 5 signs)</span>
-                        <button class="form-button"></button>
-                    </form>
-                </div>
-    
-                <div class="popup-new-check-repeat">
-                    <span class="popup-new-check-text">Are you sure now?</span>
-                    <button class="popup-new-check-button-yes">Uh uh!</button>
-                    <span>If you thought you could choose again, you were wrong! Muahahahah!</span>
-                </div>
+                <div class="popup-confirmation">
+                    <span>Alrighty! Score updated!</span>
+                    <span>Do you want to play again?</span>
 
-                <!-- UPDATE BEST -->
-                <div class="popup-update">
-                    <span>
-                        Congratulations! You managed to beat your prior best self! You showed them! Can you sense the feeling of pride and accomplishment? <br>
-                        Here, input a new name if you want. Otherwise, if you leave this space empty, the last name you entered will be used.
-                    </span>
-                    <form>
-                        <input class="form-name" type="text" name="name" id="player-name" placeholder="Input your name here">
-                        <span>What did I tell you? Make it shorter! (Hint: My limited processing capability can only accept 5 signs)</span>
-                        <button class="form-button"></button>
-                    </form>
-                </div>
-        
-                <!-- FAIL -->
-                <div class="popup-fail">
-                    <div>
-                        <span>Yeah, that could have gone better. Wanna try again?</span>
-                        <button> Yep! </button>
-                        <button> Nah! </button>     <!--  LINK TO 9GAG   https://9gag.com/  -->
-                    </div>
-                </div>
-        
-                <div class="popup-fail-bot-check" >
-                    <div>
-                        <span>You did so badly I have reasons to think you may not be a human being, but a terrible ugly bot. ARE YOU?!</span>
-                        <form class="form-bot-check">
-                            <input class="form-bot-check-radio" type="radio" name="bot-check" id="radio-yes">
-                            <label for="radio-yes">Yes</label><br>
-                            <input class="form-bot-check-radio" type="radio" name="bot-check" id="radio-hell-yes">
-                            <label for="radio-hell-yes">Hell yes!</label><br>
-                            <input class="form-bot-check-radio" type="radio" name="bot-check" id="radio-think-so">
-                            <label for="radio-think-so">I think so?</label><br>
-                            <input class="form-bot-check-radio" type="radio" name="bot-check" id="radio-42">
-                            <label for="radio-42">42</label><br>
-                            <button class="form-bot-check-confirm">This is me!</button>
-                        </form>
-                    </div>
-        
-                    <span class="bot-check-fail">I really think you are a bot, are you sure you aren't a bot?</span>
-                    <button class="bot-check-goback-button">Yes! I want to answer again!</button>
-                    <button class="bot-check-giveup-button">You caught me! I give up! Let me leave this place!</button>
-        
-                    <span class="bot-check-success-meh">Alright, I guess you are a human being after all... Move along, move along...</span>
-                    <button class="bot-check-success-meh">I'm going!</button>
-        
-                    <span class="bot-check-success-cultured">I see you're not only a human being, but also a being of culture. Good luck!</span>
-                    <button class="bot-check-success-button">Thanks!</button>
-                </div>
-                
+                    <button class="popup-button popup-button-play-yes">Yes!</button>
+                    <a href="https://9gag.com/">
+                        <button class="popup-button popup-button-play-no">Nah</button>
+                    </a>
+                </div>     
+
             </div>
-    
-            
 
         </div>
-            
     </div>
 
 </body>
@@ -206,14 +139,3 @@
 
 
 </html>
-
-<!--
-
-/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#94dcf7+0,4bc4f4+36,59bfff+46,257fce+100 */
-background: rgb(148,220,247); /* Old browsers */
-background: -moz-linear-gradient(top,  rgba(148,220,247,1) 0%, rgba(75,196,244,1) 36%, rgba(89,191,255,1) 46%, rgba(37,127,206,1) 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top,  rgba(148,220,247,1) 0%,rgba(75,196,244,1) 36%,rgba(89,191,255,1) 46%,rgba(37,127,206,1) 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom,  rgba(148,220,247,1) 0%,rgba(75,196,244,1) 36%,rgba(89,191,255,1) 46%,rgba(37,127,206,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#94dcf7', endColorstr='#257fce',GradientType=0 ); /* IE6-9 */
-
--->

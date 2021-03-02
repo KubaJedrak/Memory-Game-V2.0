@@ -356,7 +356,7 @@ TO KEEP THE SIZE OF THE "SLOT" THE SAME */
     width: 36px;
     height: 36px;
 
-    margin: 1% 90%;
+    margin: 1% 92.5%;
 
     border: 3px black solid;
     border-radius: 50%;
@@ -379,14 +379,17 @@ TO KEEP THE SIZE OF THE "SLOT" THE SAME */
     color: #84c8ff;
 }
 
-.popup-new-input {
+.popup-input {
+
+    display: none;
+
     width: 80%;
     height: 80%;
 
     margin: 5% auto;
 }
 
-.popup-new-input-form {
+.popup-input-form {
     width: 90%;
 }
 
@@ -395,41 +398,9 @@ TO KEEP THE SIZE OF THE "SLOT" THE SAME */
 }
 
 .form-button {
-    display: block;
+    display: block; /* replace with actual styling */
 }
 
-.popup-new-check {
+.popup-confirmation {
     display: none;
-
-
-}
-
-.popup-new-input-repeat {
-    display: none;
-
-
-}
-
-.popup-new-check-repeat {
-    display: none;
-
-
-}
-
-.popup-update {
-    display: none;
-
-
-}
-
-.popup-fail {
-    display: none;
-
-
-}
-
-.popup-fail-bot-check {
-    display: none;
-
-
 }

@@ -239,7 +239,7 @@ function gameTimer() {
 }
 
 function endGame() {
-    resetStats()
+    // resetStats()
     displayPairsNumber()
     gameBox.innerHTML = "" //empties the board (also removes objects with class "empty")
     gameInProgress = false
@@ -251,9 +251,10 @@ function endGame() {
 
 // game ended successfully - player won
 function gameFinished() {
-    updateScores()
+    // updateScores()
+    showPopUp()
     endGame()
-    window.alert("Congratulations, you won!")  // add a popup
+    // window.alert("Congratulations, you won!")  // add a popup
 }
 
 // game ended unsuccessfully - player ran out of time
@@ -263,6 +264,7 @@ function gameLost() {
 
     clearInterval(timer)
     displayTime.innerHTML = "Time Remaining: "
+    resetStats() // added here because of the shift in location on the win condition
 }
 
 function resetStats() {
@@ -445,31 +447,59 @@ function timeDisplay() {
 
 //check if Best Scores already exist & if not, populate them with empty logs:
 let scoresInitialCheck = window.localStorage.getItem("scores")
+let savedNameDownloaded = JSON.parse(localStorage.getItem("savedName"))
 
 if (scoresInitialCheck === null) { 
     let zeroScores = [ // change to function
         {
             id: "diff-easy",
             values: [
-                0, 
-                0,
-                0
+                {
+                    score: 0,
+                    name: "-------"
+                }, 
+                {
+                    score: 0,
+                    name: "-------"
+                }, 
+                {
+                    score: 0,
+                    name: "-------"
+                }
             ]
         },
         {  
             id: "diff-med",
             values: [
-                0,
-                0,
-                0
+                {
+                    score: 0,
+                    name: "-------"
+                }, 
+                {
+                    score: 0,
+                    name: "-------"
+                }, 
+                {
+                    score: 0,
+                    name: "-------"
+                }
             ]
         },
         {        
             id: "diff-hard",
             values: [
-                0,
-                0,
-                0
+                {
+                    score: 0,
+                    name: "-------"
+                }, 
+                {
+                    score: 0,
+                    name: "-------"
+                }, 
+                {
+                    score: 0,
+                    name: "-------"
+                }
             ]
         }
     ]
@@ -481,10 +511,17 @@ const firstScore = document.querySelector(".first-score")
 const secondScore = document.querySelector(".second-score")
 const thirdScore = document.querySelector(".third-score")
 
+const firstName = document.querySelector(".first-name")
+const secondName = document.querySelector(".second-name")
+const thirdName = document.querySelector(".third-name")
+
 // pull best times
 let scores = JSON.parse(window.localStorage.getItem("scores"))
 let scoreDisplayDifficulty
 let scoreDisplayFocus
+
+let nameChosen
+let savedName
 
 // adds Click event listener to Score Display buttons to change displayed scores based on game difficulty
 scoreDiffButtons.forEach(button => {
@@ -504,15 +541,18 @@ scoreDiffButtons.forEach(button => {
 // updates the Best Scores display
 function displayScores(scoreDisplayDifficulty) {
 
-    scoreDiffButtons.forEach( button => {  //  removes active score display indicator  || FRANKSTEIN AGAIN? :D
+    scoreDiffButtons.forEach( button => {  //  removes active score display indicator
         button.classList.remove("button-active")
     })
 
     scores.forEach( score => {
         if (score.id === scoreDisplayDifficulty) {
-            parseScoreTime(score.values[0], firstScore)
-            parseScoreTime(score.values[1], secondScore)
-            parseScoreTime(score.values[2], thirdScore)
+            parseScoreTime(score.values[0].score, firstScore)
+            firstName.innerText = score.values[0].name
+            parseScoreTime(score.values[1].score, secondScore)
+            secondName.innerText = score.values[1].name
+            parseScoreTime(score.values[2].score, thirdScore)
+            thirdName.innerText = score.values[2].name
         }
     })
 
@@ -547,13 +587,19 @@ function parseScoreTime(scoreValue, scoreDisplay) {
 }
 
 // updates score array after game end
-function updateScores() {                                           // array.find()
+function updateScores() {                  // scores.find( score => score.id === "diff-med")
     scores.forEach( score => {
-        if (score.id === difficulty) {  // Frankenstein would be proud
+        if (score.id === difficulty) {
             for (let i = 0; i < score.values.length; i++) {
-                if (time > score.values[i]) {
-                    score.values.splice(i, 0, time)
-                    score.values.pop();
+                if (time > score.values[i].score) {
+
+                    let newScore = {
+                        score: time,
+                        name: nameChosen
+                    }
+
+                    score.values.splice(i, 0, newScore)
+                    score.values.pop()
                     localStorage.setItem("scores", JSON.stringify(scores))
                     break
                 }
@@ -563,17 +609,87 @@ function updateScores() {                                           // array.fin
     // changes score display to the selected Game Difficulty on game End:
     scoreDisplayDifficulty = difficulty
     displayScores(scoreDisplayDifficulty)
+    savedName = nameChosen
+
+    updateSavedName()
+    resetStats() // resets stats for the next game
+}
+
+function autoUpdateScores() {                  // scores.find( score => score.id === "diff-med")
+    scores.forEach( score => {
+        if (score.id === difficulty) {
+            for (let i = 0; i < score.values.length; i++) {
+                if (time > score.values[i].score) {
+
+                    let newScore = {
+                        score: time,
+                        name: savedNameDownloaded
+                    }
+
+                    score.values.splice(i, 0, newScore)
+                    score.values.pop()
+                    localStorage.setItem("scores", JSON.stringify(scores))
+                    break
+                }
+            }
+        }
+    })
+    // changes score display to the selected Game Difficulty on game End:
+    scoreDisplayDifficulty = difficulty
+    displayScores(scoreDisplayDifficulty)
+
+    resetStats() // resets stats for the next game
 }
 
 // ------- POP-UPs Behaviour: ------- 
-// ADD NAMES/HANDLES
-
-const exitButton = document.querySelector(".popup-exit-frame")
-
 const popupWindow = document.querySelector(".popup-box")
+const exitButton = document.querySelector(".popup-exit-frame")
+const popupContent = document.querySelector(".popup-content")
+const popupInput = document.querySelector(".popup-input")
+const popupConfirmation = document.querySelector(".popup-confirmation")
+
+const nameInput = document.querySelector("#player-name")
+const nameConfirmBtn = document.querySelector(".form-button")
+
+const playAgainYes = document.querySelector(".popup-button-play-yes")
+const playAgainNo = document.querySelector(".popup-button-play-no")
+
+// ----------------------
+// button event listeners:
 
 exitButton.addEventListener("click", () => {
     popupWindow.style.display = "none"
+
+    autoUpdateScores() // updates scores based on the stored name
 })
 
-// popupWindow.style.display = "block"
+function updateSavedName() {
+    localStorage.setItem("savedName", JSON.stringify(savedName))
+}
+
+nameConfirmBtn.addEventListener("click", () => {
+
+    let input = nameInput.value
+
+    if (input != "") {
+        nameChosen = nameInput.value.trim();
+    
+        popupInput.style.display = "none"
+        popupConfirmation.style.display = "block"
+
+        updateScores()
+    }
+})
+
+playAgainYes.addEventListener("click", () => {
+    popupWindow.style.display = "none"
+    popupConfirmation.style.display = "none"
+})
+
+function showPopUp() {
+    popupWindow.style.display = "block"
+    popupInput.style.display = "block"
+}
+
+// --------------------------
+
