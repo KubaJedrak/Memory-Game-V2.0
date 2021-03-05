@@ -135,7 +135,7 @@ const tiles = [
 
 // two minor changes to functions (details below in comments)
 // rework the "intro" animation (info below)
-// styling for popups + mobile sizing
+// mobile sizing
 // clean-up required
    
 const difficultyButtons = document.querySelectorAll(".diff-button")
@@ -146,7 +146,6 @@ const displayNumberOfPairs = document.querySelector(".pairs-left-display")
 
 let difficulty
 let numberOfTilesToDraw
-let randomNumber
 let randomIndecesArray = []
 let tilesDrawn = []
 let time
@@ -161,7 +160,6 @@ let currentChoices = []
 let currentChoicesIDs = []
 
 let gameInProgress = false
-let difficultyAssigned = false
 
 // Difficulty selection:
 difficultyButtons.forEach(difficultyButton => difficultyButton.addEventListener("click", (e) => {
@@ -207,7 +205,7 @@ startButton.addEventListener("click", gameStart)
 function gameStart() {
     if (!gameInProgress && difficulty) {
         assignDifficulty()
-        displayPairsNumber() // to reset the number of pairs to match visible on the screen
+        displayPairsNumber() // to reset the number of pairs to match visible on the screen (at game restart)
         getRandomIndecesArray()
         drawTiles()
         gameInProgressFunc() 
@@ -239,7 +237,6 @@ function gameTimer() {
 }
 
 function endGame() {
-    // resetStats()
     displayPairsNumber()
     gameBox.innerHTML = "" //empties the board (also removes objects with class "empty")
     gameInProgress = false
@@ -251,10 +248,8 @@ function endGame() {
 
 // game ended successfully - player won
 function gameFinished() {
-    // updateScores()
     showPopUp()
     endGame()
-    // window.alert("Congratulations, you won!")  // add a popup
 }
 
 // game ended unsuccessfully - player ran out of time
@@ -518,7 +513,6 @@ const thirdName = document.querySelector(".third-name")
 // pull best times
 let scores = JSON.parse(window.localStorage.getItem("scores"))
 let scoreDisplayDifficulty
-let scoreDisplayFocus
 
 let nameChosen
 let savedName
