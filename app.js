@@ -133,10 +133,10 @@ const tiles = [
     }    
 ]
 
-// change name of variable "difficulty" to else more clear like "selectedGameDifficulty"
 // two minor changes to functions (details below in comments)
-// add name and popup system
 // rework the "intro" animation (info below)
+// styling for popups + mobile sizing
+// clean-up required
    
 const difficultyButtons = document.querySelectorAll(".diff-button")
 const startButton = document.querySelector(".game-start-button")
@@ -659,6 +659,7 @@ const playAgainNo = document.querySelector(".popup-button-play-no")
 
 exitButton.addEventListener("click", () => {
     popupWindow.style.display = "none"
+    popupConfirmation.style.display = "none"
 
     autoUpdateScores() // updates scores based on the stored name
 })

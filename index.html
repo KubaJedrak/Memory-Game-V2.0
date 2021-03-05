@@ -101,31 +101,46 @@
 
             <div class="popup-content">
 
-                <div class="popup-input">
-                    <span class="popup-input-text">
-                        Congratulations! You did well. 
-                        <br>
-                        <br>                    
-                        Here, feel free to post your name on the leaderboard. What do you want to be called? (Don't make it too long, okay?)
-                        <br>
-                        <br>
-                    </span>
+                <div class="popup-content-box popup-input">
+                    
+                    <article class="popup-input-text">
+                        
+                        <span class="popup-input-congratulations"> 
+                            Congratulations! You did well. 
+                        </span>
+
+                        <span class="popup-input-name-prompt">
+                            Here, feel free to post your name on the leaderboard. What do you want to be called? 
+                            <br><span font-size="0.9em">(Don't make it too long, okay?)</span>
+                        </span>
+
+                    </article>
         
                     <form class="popup-input-form">
                         <input class="form-name" type="text" name="name" id="player-name" placeholder="Input your name here" maxlength="7">
-                        <span class="form-length-message">What did I tell you? Make it shorter! (Hint: My limited processing capability can only accept 5 signs)</span>
                         <button class="form-button" type="button">This is it!</button>
                     </form>
+
                 </div>
     
-                <div class="popup-confirmation">
-                    <span>Alrighty! Score updated!</span>
-                    <span>Do you want to play again?</span>
+                <div class="popup-content-box popup-confirmation">
+                    <article class="popup-confirmation-text">
+                        <span class="score-updated-message">
+                            Alrighty! Score updated!<br>
+                            <br>
+                        </span>
+                        <span class="play-again-prompt">
+                            Do you want to play again?
+                        </span>
+                    </article>
 
-                    <button class="popup-button popup-button-play-yes">Yes!</button>
-                    <a href="https://9gag.com/">
-                        <button class="popup-button popup-button-play-no">Nah</button>
-                    </a>
+                    <div class="popup-confirmation-buttons">
+                        <button class="popup-button popup-button-play-yes">Yes!</button>
+                        <a href="https://9gag.com/">
+                            <button class="popup-button popup-button-play-no">Nah</button>
+                        </a>
+                    </div>
+
                 </div>     
 
             </div>
